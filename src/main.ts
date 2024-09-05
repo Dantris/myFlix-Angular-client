@@ -4,11 +4,16 @@ import { routes } from './app/app.routes';  // Import your routes
 import { AppComponent } from './app/app.component';
 import { importProvidersFrom } from '@angular/core';
 import { MatDialogModule } from '@angular/material/dialog';
-import { provideAnimationsAsync } from '@angular/platform-browser/animations/async';
+import { HttpClientModule } from '@angular/common/http';  // Import HttpClientModule for API services
+import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 
 bootstrapApplication(AppComponent, {
   providers: [
     provideRouter(routes),
-    importProvidersFrom(MatDialogModule), provideAnimationsAsync()  // Import Material Dialog globally if needed
+    importProvidersFrom(
+      MatDialogModule,     // Material Dialog module
+      HttpClientModule,    // For API calls
+      BrowserAnimationsModule // For material animations
+    )
   ]
 }).catch(err => console.error(err));

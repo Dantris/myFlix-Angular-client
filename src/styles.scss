@@ -1,58 +1,81 @@
-
 // Custom Theming for Angular Material
-// For more information: https://material.angular.io/guide/theming
 @use '@angular/material' as mat;
-// Plus imports for other components in your app.
 
 // Include the common styles for Angular Material. We include this here so that you only
-// have to load a single css file for Angular Material in your app.
-// Be sure that you only ever include this mixin once!
+// have to load a single CSS file for Angular Material in your app.
 @include mat.core();
 
-// Define the theme object.
-$myFlix-Angular-client-theme: mat.define-theme((
-  color: (
-    theme-type: dark,
-    primary: mat.$azure-palette,
-    tertiary: mat.$blue-palette,
-  ),
-  density: (
-    scale: 0,
-  )
-));
+// Define the prebuilt theme you want to use
+@import '@angular/material/prebuilt-themes/indigo-pink.css';  // Using pre-built theme
 
-// Include theme styles for core and each component used in your app.
-// Alternatively, you can import and @include the theme mixins for each component
-// that you are using.
-:root {
-  @include mat.all-component-themes($myFlix-Angular-client-theme);
-}
-
-// Comment out the line below if you want to use the pre-defined typography utility classes.
-// For more information: https://material.angular.io/guide/typography#using-typography-styles-in-your-application.
-// @include mat.typography-hierarchy($myFlix-Angular-client-theme);
-
-// Comment out the line below if you want to use the deprecated `color` inputs.
-// @include mat.color-variants-backwards-compatibility($myFlix-Angular-client-theme);
-/* You can add global styles to this file, and also import other style files */
+// Global styles
 html, body {
   height: 100%;
   margin: 0;
   display: flex;
+  font-family: 'Roboto', 'Helvetica Neue', sans-serif;
+  background-color: #f4f4f4;  // Light background for a clean look
 }
 
+// Styling for the main page content
 .main-page {
   display: flex;
-  flex-direction: column; /* Stack the heading and buttons vertically */
-  justify-content: center; /* Center vertically */
-  align-items: center;     /* Center horizontally */
-  height: 100vh;           /* Full viewport height */
-  width: 100vw;            /* Full viewport width */
-  text-align: center;      /* Center the text */
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;  // Full height to center the content vertically
+  width: 100vw;   // Full width for horizontal centering
+  text-align: center;
 }
 
-.button-group {
-  display: flex;           /* Display the buttons inline horizontally */
-  gap: 10px;               /* Add some space between the buttons */
-  margin-top: 10px;        /* Add a little margin between the heading and buttons */
+h1 {
+  font-size: 3.5rem;   // Larger font size for heading
+  font-weight: 600;    // Bold font for emphasis
+  margin-bottom: 20px; // Space between heading and buttons
+  color: #3f51b5;      // Indigo color for the heading
 }
+
+// Button styling for "Sign Up" and "Login" buttons
+.button-group {
+  display: flex;
+  gap: 10px;           // Space between the buttons
+  margin-top: 20px;    // Space between heading and buttons
+}
+
+button[mat-raised-button] {
+  width: 150px;        // Fixed width for consistency
+  height: 48px;        // Taller button for better touch targets
+  font-size: 16px;     // Slightly larger font size
+  font-weight: 600;    // Bold font
+}
+
+button[mat-raised-button].mat-primary {
+  background-color: #3f51b5;  // Indigo primary color for the buttons
+  color: white;               // White text color for contrast
+}
+
+// mat-card styling (if applicable, for the dialog form)
+mat-card {
+  width: 400px;
+  margin: 0 auto;
+  padding: 20px;
+  box-shadow: 0px 4px 12px rgba(0, 0, 0, 0.1);
+  background-color: white;    // Ensure the card has a white background
+  border-radius: 10px;        // Rounded corners for a softer look
+}
+
+mat-form-field {
+  width: 100%;
+}
+
+mat-card-title {
+  text-align: center;
+  font-size: 24px;
+  margin-bottom: 16px;
+}
+
+mat-card-actions {
+  display: flex;
+  justify-content: center;
+}
+
