@@ -1,0 +1,16 @@
+<div class="welcome-container">
+  <h1>Welcome to myFlix!</h1>
+  
+  <!-- Show Profile, All Movies, and Logout buttons if user is logged in -->
+  <ng-container *ngIf="isLoggedIn(); else loggedOut">
+    <button mat-raised-button color="primary" routerLink="/profile">Profile</button>
+    <button mat-raised-button color="primary" routerLink="/movies">All Movies</button>
+    <button mat-raised-button color="warn" (click)="logout()">Logout</button>
+  </ng-container>
+
+  <!-- Show Sign Up and Login buttons if user is NOT logged in -->
+  <ng-template #loggedOut>
+    <button mat-raised-button color="primary" (click)="openUserRegistrationDialog()">Sign Up</button>
+    <button mat-raised-button color="primary" (click)="openLoginDialog()">Login</button>
+  </ng-template>
+</div>

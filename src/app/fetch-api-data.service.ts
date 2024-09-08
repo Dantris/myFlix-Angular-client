@@ -10,67 +10,127 @@ export class FetchApiDataService {
   // Inject HttpClient module to be used for API calls
   constructor(private http: HttpClient) { }
 
-  // Define your API base URL (replace with your actual backend URL)
-  private apiUrl = 'https://your-api-url.com/';
+  // Define your API base URL
+  private apiUrl = 'https://myflixv1-deebdbd0b5ba.herokuapp.com';
 
-  // Example for User Registration:
+  // User Registration
   public userRegistration(userDetails: any): Observable<any> {
-    return this.http.post(`${this.apiUrl}users`, userDetails);
+    const token = localStorage.getItem('token');
+    const headers = new HttpHeaders({
+      'Authorization': `Bearer ${token}`,
+      'Content-Type': 'application/json'
+    });
+    return this.http.post(`${this.apiUrl}/users`, userDetails, { headers });
   }
 
-  // Implement the rest of the API calls
   // User Login
   public userLogin(userDetails: any): Observable<any> {
-    return this.http.post(`${this.apiUrl}login`, userDetails);
+    const token = localStorage.getItem('token');
+    const headers = new HttpHeaders({
+      'Authorization': `Bearer ${token}`,
+      'Content-Type': 'application/json'
+    });
+    return this.http.post(`${this.apiUrl}/login`, userDetails, { headers });
   }
 
   // Get all movies
   public getAllMovies(): Observable<any> {
-    return this.http.get(`${this.apiUrl}movies`);
+    const token = localStorage.getItem('token'); // Retrieve the token from localStorage
+    const headers = new HttpHeaders({
+      'Authorization': `Bearer ${token}`,
+      'Content-Type': 'application/json'
+    });
+    return this.http.get(`${this.apiUrl}/movies`, { headers });
   }
+  
 
   // Get one movie by title
   public getMovie(title: string): Observable<any> {
-    return this.http.get(`${this.apiUrl}movies/${title}`);
+    const token = localStorage.getItem('token');
+    const headers = new HttpHeaders({
+      'Authorization': `Bearer ${token}`,
+      'Content-Type': 'application/json'
+    });
+    return this.http.get(`${this.apiUrl}/movies/${title}`, { headers });
   }
 
   // Get director details by name
   public getDirector(directorName: string): Observable<any> {
-    return this.http.get(`${this.apiUrl}directors/${directorName}`);
+    const token = localStorage.getItem('token');
+    const headers = new HttpHeaders({
+      'Authorization': `Bearer ${token}`,
+      'Content-Type': 'application/json'
+    });
+    return this.http.get(`${this.apiUrl}/directors/${directorName}`, { headers });
   }
 
   // Get genre details by name
   public getGenre(genreName: string): Observable<any> {
-    return this.http.get(`${this.apiUrl}genres/${genreName}`);
+    const token = localStorage.getItem('token');
+    const headers = new HttpHeaders({
+      'Authorization': `Bearer ${token}`,
+      'Content-Type': 'application/json'
+    });
+    return this.http.get(`${this.apiUrl}/genre/${genreName}`, { headers });
   }
 
   // Get user details
   public getUser(username: string): Observable<any> {
-    return this.http.get(`${this.apiUrl}users/${username}`);
+    const token = localStorage.getItem('token');
+    const headers = new HttpHeaders({
+      'Authorization': `Bearer ${token}`,
+      'Content-Type': 'application/json'
+    });
+    return this.http.get(`${this.apiUrl}/users/${username}`, { headers });
   }
 
   // Get favorite movies for a user
   public getFavoriteMovies(username: string): Observable<any> {
-    return this.http.get(`${this.apiUrl}users/${username}/movies`);
+    const token = localStorage.getItem('token');
+    const headers = new HttpHeaders({
+      'Authorization': `Bearer ${token}`,
+      'Content-Type': 'application/json'
+    });
+    return this.http.get(`${this.apiUrl}/users/${username}/movies`, { headers });
   }
 
   // Add a movie to favorite movies
   public addFavoriteMovie(username: string, movieId: string): Observable<any> {
-    return this.http.post(`${this.apiUrl}users/${username}/movies/${movieId}`, {});
+    const token = localStorage.getItem('token');
+    const headers = new HttpHeaders({
+      'Authorization': `Bearer ${token}`,
+      'Content-Type': 'application/json'
+    });
+    return this.http.post(`${this.apiUrl}/users/${username}/movies/${movieId}`, {}, { headers });
   }
 
   // Edit user details
   public editUser(username: string, userDetails: any): Observable<any> {
-    return this.http.put(`${this.apiUrl}users/${username}`, userDetails);
+    const token = localStorage.getItem('token');
+    const headers = new HttpHeaders({
+      'Authorization': `Bearer ${token}`,
+      'Content-Type': 'application/json'
+    });
+    return this.http.put(`${this.apiUrl}/users/${username}`, userDetails, { headers });
   }
 
   // Delete user
   public deleteUser(username: string): Observable<any> {
-    return this.http.delete(`${this.apiUrl}users/${username}`);
+    const token = localStorage.getItem('token');
+    const headers = new HttpHeaders({
+      'Authorization': `Bearer ${token}`,
+      'Content-Type': 'application/json'
+    });
+    return this.http.delete(`${this.apiUrl}/users/${username}`, { headers });
   }
 
   // Delete a movie from favorite movies
   public removeFavoriteMovie(username: string, movieId: string): Observable<any> {
-    return this.http.delete(`${this.apiUrl}users/${username}/movies/${movieId}`);
+    const token = localStorage.getItem('token');
+    const headers = new HttpHeaders({
+      'Authorization': `Bearer ${token}`,
+      'Content-Type': 'application/json'
+    });
+    return this.http.delete(`${this.apiUrl}/users/${username}/movies/${movieId}`, { headers });
   }
 }

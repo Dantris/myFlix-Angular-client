@@ -22,7 +22,7 @@ import { MatButtonModule } from '@angular/material/button';
   styleUrls: ['./login-form.component.scss']
 })
 export class LoginFormComponent implements OnInit {
-  @Input() loginData = { Username: '', Password: '' };
+  @Input() loginData = { username: '', password: '' };
 
   constructor(
     public fetchApiData: FetchApiDataService,
@@ -35,16 +35,19 @@ export class LoginFormComponent implements OnInit {
   loginUser(): void {
     this.fetchApiData.userLogin(this.loginData).subscribe(
       (result) => {
+        localStorage.setItem('token', result.token);  // Store the token
+        localStorage.setItem('user', JSON.stringify(result.user));  // Optionally store user details
         this.dialogRef.close();
         this.snackBar.open('User logged in successfully!', 'OK', {
           duration: 2000,
         });
       },
-      (result) => {
-        this.snackBar.open(result, 'OK', {
+      (error) => {
+        this.snackBar.open('Login failed. Please check your credentials.', 'OK', {
           duration: 2000,
         });
       }
     );
   }
+  
 }

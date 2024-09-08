@@ -18,7 +18,6 @@ import { MatCardFooter } from '@angular/material/card';
 import { MatFormField } from '@angular/material/form-field';
 import { FormsModule } from '@angular/forms';
 
-
 @Component({
   selector: 'app-user-registration-form',
   standalone: true,
@@ -34,13 +33,12 @@ import { FormsModule } from '@angular/forms';
     FormsModule
   ],
   templateUrl: './user-registration-form.component.html',
-  styleUrl: './user-registration-form.component.scss',
+  styleUrls: ['./user-registration-form.component.scss'], // corrected to 'styleUrls'
 })
-  
+
 export class UserRegistrationFormComponent implements OnInit {
 
-  @Input() userData = { Username: '', Password: '', Email: '', Birthday: '' };
-
+  @Input() userData = { username: '', password: '', email: '', birthday: '' };
 
   constructor(
     public fetchApiData: FetchApiDataService,
@@ -48,24 +46,35 @@ export class UserRegistrationFormComponent implements OnInit {
     public snackBar: MatSnackBar
   ) { }
 
-  ngOnInit(): void {
-  }
+  ngOnInit(): void {}
 
   // This is the function responsible for sending the form inputs to the backend
   registerUser(): void {
-    this.fetchApiData.userRegistration(this.userData).subscribe((response) => {
-      // Logic for a successful user registration goes here! (To be implemented)
-      this.dialogRef.close(); // This will close the modal on success!
-      console.log(response);
-      this.snackBar.open('User Registeration Successful', 'OK', {
-        duration: 2000
-      });
-    }, (response) => {
-      console.log(response);
-      this.snackBar.open(response, 'OK', {
-        duration: 2000
-      });
-    });
+    const formattedUserData = {
+      username: this.userData.username, // Use lowercase for username field
+      password: this.userData.password, // Use lowercase for password field
+      email: this.userData.email,       // Use lowercase for email field
+      birthday: new Date(this.userData.birthday).toISOString(), // Format birthday
+    };
+  
+    this.fetchApiData.userRegistration(formattedUserData).subscribe(
+      (result) => {
+        console.log(result);
+        this.snackBar.open('User registered successfully!', 'OK', { duration: 2000 });
+        this.dialogRef.close(); // Close dialog on success
+      },
+      (error) => {
+        console.error('Error during registration:', error);
+        if (error.error.errors) {
+          error.error.errors.forEach((err: any) => {
+            this.snackBar.open(err.msg, 'OK', { duration: 3000 });
+          });
+        } else {
+          this.snackBar.open('An error occurred. Please try again.', 'OK', { duration: 3000 });
+        }
+      }
+    );
   }
+  
 
 }

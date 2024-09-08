@@ -1,0 +1,28 @@
+<mat-card>
+    <mat-card-header>
+      <mat-card-title>Your Profile</mat-card-title>
+    </mat-card-header>
+  
+    <mat-card-content>
+      <form>
+        <mat-form-field>
+          <input matInput placeholder="Username" [(ngModel)]="userData.username" name="username" required />
+        </mat-form-field>
+        <mat-form-field>
+          <input matInput type="password" placeholder="Password" [(ngModel)]="userData.password" name="password" required />
+        </mat-form-field>
+        <mat-form-field>
+          <input matInput type="email" placeholder="Email" [(ngModel)]="userData.email" name="email" required />
+        </mat-form-field>
+        <mat-form-field>
+          <input matInput type="date" placeholder="Birthday" [(ngModel)]="userData.birthday" name="birthday" required />
+        </mat-form-field>
+      </form>
+    </mat-card-content>
+  
+    <mat-card-actions>
+      <button mat-raised-button color="primary" (click)="updateProfile()">Save Changes</button>
+      <button mat-raised-button color="warn" (click)="deleteProfile()">Delete Account</button>
+    </mat-card-actions>
+  </mat-card>
+  

@@ -12,9 +12,8 @@
 html, body {
   height: 100%;
   margin: 0;
-  display: flex;
   font-family: 'Roboto', 'Helvetica Neue', sans-serif;
-  background-color: #f4f4f4;  // Light background for a clean look
+  background-color: #f4f4f4;
 }
 
 // Styling for the main page content
@@ -23,8 +22,8 @@ html, body {
   flex-direction: column;
   justify-content: center;
   align-items: center;
-  height: 100vh;  // Full height to center the content vertically
-  width: 100vw;   // Full width for horizontal centering
+  height: 100vh; // Full height to center the content vertically
+  width: 100vw;  // Full width for horizontal centering
   text-align: center;
 }
 
