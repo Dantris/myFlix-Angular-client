@@ -1,33 +1,39 @@
 import { Component, OnInit } from '@angular/core';
 import { FetchApiDataService } from '../fetch-api-data.service';
-import { MatSnackBar } from '@angular/material/snack-bar'; // For snack bar notifications
-import { MatCardModule } from '@angular/material/card';    // For material card layout
-import { MatFormFieldModule } from '@angular/material/form-field'; // For form fields
-import { MatInputModule } from '@angular/material/input';   // For input fields
-import { MatButtonModule } from '@angular/material/button'; // For buttons
-import { FormsModule } from '@angular/forms';               // Needed for two-way binding
-import { CommonModule } from '@angular/common';             // Needed for structural directives like *ngIf, *ngFor
+import { MatSnackBar, MatSnackBarModule } from '@angular/material/snack-bar';
+import { MatCardModule } from '@angular/material/card';
+import { MatButtonModule } from '@angular/material/button';
+import { MatFormFieldModule } from '@angular/material/form-field';
+import { MatInputModule } from '@angular/material/input';
+import { CommonModule } from '@angular/common';
+import { MatChipsModule } from '@angular/material/chips';
+import { FormsModule } from '@angular/forms';  // For [(ngModel)]
+import { Router } from '@angular/router';  // Import Angular Router
 
 @Component({
   selector: 'app-user-profile',
+  standalone: true,
   templateUrl: './user-profile.component.html',
   styleUrls: ['./user-profile.component.scss'],
-  standalone: true, // Mark component as standalone
   imports: [
-    MatCardModule,         // Material Card
-    MatFormFieldModule,    // Material Form Fields
-    MatInputModule,        // Material Inputs
-    MatButtonModule,       // Material Buttons
-    FormsModule,           // Angular FormsModule for two-way binding
-    CommonModule           // CommonModule for *ngFor, *ngIf directives
+    MatCardModule,
+    MatButtonModule,
+    MatSnackBarModule,
+    CommonModule,
+    MatChipsModule,
+    MatFormFieldModule,
+    MatInputModule,
+    FormsModule
   ]
 })
 export class UserProfileComponent implements OnInit {
   userData = { username: '', password: '', email: '', birthday: '' };
+  favoriteMovies: any[] = [];
 
   constructor(
     private fetchApiData: FetchApiDataService,
-    private snackBar: MatSnackBar
+    private snackBar: MatSnackBar,
+    private router: Router  // Inject Angular Router
   ) {}
 
   ngOnInit(): void {
@@ -38,7 +44,12 @@ export class UserProfileComponent implements OnInit {
     const username = localStorage.getItem('username');
     if (username) {
       this.fetchApiData.getUser(username).subscribe((res: any) => {
-        this.userData = res;
+        console.log(res);  // Check if the correct data is returned
+
+        this.userData.username = res.username;
+        this.userData.email = res.email;
+        this.userData.birthday = res.birthday; // Ensure it's formatted as needed
+        this.favoriteMovies = res.favoriteMovies;
       });
     }
   }
@@ -53,6 +64,11 @@ export class UserProfileComponent implements OnInit {
     this.fetchApiData.deleteUser(this.userData.username).subscribe(() => {
       this.snackBar.open('Account deleted successfully!', 'OK', { duration: 2000 });
       localStorage.clear(); // Clear user data from local storage
+      this.router.navigate(['/welcome']);  // Navigate back to welcome/login page
     });
+  }
+
+  goBack(): void {
+    this.router.navigate(['/welcome']);
   }
 }

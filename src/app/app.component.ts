@@ -1,13 +1,13 @@
 import { Component } from '@angular/core';
-import { RouterOutlet } from '@angular/router';
+import { RouterModule } from '@angular/router';
 
 @Component({
   selector: 'app-root',
+  templateUrl: './app.component.html',
+  styleUrls: ['./app.component.scss'],
   standalone: true,
-  template: `<router-outlet></router-outlet>`,  // This allows the MovieCardComponent to be rendered
-  imports: [RouterOutlet]
+  imports: [RouterModule]  // Import RouterModule here for routing
 })
 export class AppComponent {
   title = 'myFlix-Angular-client';
 }
-

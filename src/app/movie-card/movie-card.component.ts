@@ -1,70 +1,130 @@
 import { Component, OnInit } from '@angular/core';
-import { MatDialog } from '@angular/material/dialog';
-import { MatSnackBar } from '@angular/material/snack-bar';  
-import { MatCardModule } from '@angular/material/card'; 
-import { MatButtonModule } from '@angular/material/button';  
-import { MatIconModule } from '@angular/material/icon'; 
-import { GenreDialogComponent } from '../genre-dialog/genre-dialog.component';
-import { DirectorDialogComponent } from '../director-dialog/director-dialog.component';
-import { MovieDetailsDialogComponent } from '../movie-details-dialog/movie-details-dialog.component';
 import { FetchApiDataService } from '../fetch-api-data.service';
-import { CommonModule } from '@angular/common'; // Needed for *ngFor, *ngIf
+import { Router } from '@angular/router';
+import { MatDialog, MatDialogModule } from '@angular/material/dialog';
+import { MatSnackBar, MatSnackBarModule } from '@angular/material/snack-bar';
+import { MatCardModule } from '@angular/material/card';
+import { MatButtonModule } from '@angular/material/button';
+import { MatIconModule } from '@angular/material/icon';
+import { CommonModule } from '@angular/common';
+import { HttpClientModule } from '@angular/common/http'; 
+import { MessageBoxComponent } from '../message-box/message-box.component';
 
 @Component({
   selector: 'app-movie-card',
-  
+  standalone: true,
   templateUrl: './movie-card.component.html',
   styleUrls: ['./movie-card.component.scss'],
-  standalone: true, // Mark component as standalone
   imports: [
-    MatCardModule,       // For material card layout
-    MatButtonModule,     // For material buttons
-    MatIconModule,       // For material icons
-    // MatDialog,           // For dialogs
-    // MatSnackBar,         // For snackbars
-    CommonModule         // For common Angular directives like *ngFor and *ngIf
+    CommonModule,
+    MatDialogModule,
+    MatCardModule,
+    MatButtonModule,
+    MatSnackBarModule,
+    MatIconModule,
+    HttpClientModule
   ]
 })
 export class MovieCardComponent implements OnInit {
-  movies: any[] = [];  // Store the list of movies
+  movies: any[] = [];
+  favoriteMovies: any[] = [];
 
   constructor(
-    private dialog: MatDialog, 
-    private fetchApiData: FetchApiDataService,
-    private snackBar: MatSnackBar  
+    public fetchApiData: FetchApiDataService,
+    public router: Router,
+    public dialog: MatDialog,
+    private snackBar: MatSnackBar
   ) {}
 
   ngOnInit(): void {
-    console.log("MovieCardComponent initialized");
-    this.getMovies();  // This should fetch the movies
+    this.getMovies();
+    this.getFavoriteMovies();
   }
-  
 
+  // Fetch all movies
   getMovies(): void {
-    this.fetchApiData.getAllMovies().subscribe((resp: any) => {
-      this.movies = resp;  // Store the movies
-      console.log(this.movies);  // Check if the movies are logged in the console
+    this.fetchApiData.getAllMovies().subscribe((res: any) => {
+      this.movies = res;
+      this.checkFavoriteMovies();
+    }, err => {
+      console.error('Failed to fetch movies:', err);
     });
   }
 
-  openGenreDialog(genre: string): void {
-    this.dialog.open(GenreDialogComponent, { data: { genre } });
-  }
-
-  openDirectorDialog(director: string): void {
-    this.dialog.open(DirectorDialogComponent, { data: { director } });
-  }
-
-  openMovieDetailsDialog(movie: any): void {
-    this.dialog.open(MovieDetailsDialogComponent, { data: { movie } });
-  }
-
-  addToFavorites(movieId: string): void {
+  // Fetch favorite movies of the user
+  getFavoriteMovies(): void {
     const username = localStorage.getItem('username');
     if (username) {
-      this.fetchApiData.addFavoriteMovie(username, movieId).subscribe(() => {
-        this.snackBar.open('Added to favorites!', 'OK', { duration: 2000 });
+      this.fetchApiData.getFavoriteMovies(username).subscribe((res: any) => {
+        this.favoriteMovies = res;
+        this.checkFavoriteMovies();
+      }, err => {
+        console.error('Failed to fetch favorite movies:', err);
       });
     }
+  }
+
+  // Check if the movies are in favorites and update the UI
+  checkFavoriteMovies(): void {
+    this.movies.forEach((movie) => {
+      movie.isFavorite = this.favoriteMovies.some((favMovie: any) => favMovie._id === movie._id);
+    });
+  }
+
+  // Toggle favorite movie status
+  modifyFavoriteMovies(movie: any): void {
+    const username = localStorage.getItem('username');
+    if (movie.isFavorite) {
+      this.fetchApiData.deleteFavoriteMovie(username!, movie._id).subscribe((res) => {
+        this.snackBar.open(`${movie.title} removed from favorites`, 'OK', { duration: 2000 });
+        movie.isFavorite = false;
+        this.getFavoriteMovies();
+      }, err => {
+        console.error(err);
+      });
+    } else {
+      this.fetchApiData.addFavoriteMovie(username!, movie._id).subscribe((res) => {
+        this.snackBar.open(`${movie.title} added to favorites`, 'OK', { duration: 2000 });
+        movie.isFavorite = true;
+        this.getFavoriteMovies();
+      }, err => {
+        console.error(err);
+      });
+    }
+  }
+
+  // Show movie details
+  showDetail(movie: any): void {
+    this.dialog.open(MessageBoxComponent, {
+      data: { title: movie.title, content: movie.description },
+      width: '400px'
+    });
+  }
+
+  // Show genre details
+  showGenre(movie: any): void {
+    this.dialog.open(MessageBoxComponent, {
+      data: { title: movie.genre.name, content: movie.genre.description },
+      width: '400px'
+    });
+  }
+
+  // Show director details
+  showDirector(movie: any): void {
+    this.dialog.open(MessageBoxComponent, {
+      data: { title: movie.director.name, content: movie.director.bio },
+      width: '400px'
+    });
+  }
+
+  // Logout functionality
+  logout(): void {
+    this.router.navigate(['/welcome']);
+    localStorage.clear();
+  }
+
+  // Redirect to user profile
+  redirectProfile(): void {
+    this.router.navigate(['/profile']);
   }
 }

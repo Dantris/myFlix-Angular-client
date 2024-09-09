@@ -1,6 +1,22 @@
 import { Injectable } from '@angular/core';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Observable } from 'rxjs';
+import { HttpInterceptor, HttpRequest, HttpHandler } from '@angular/common/http';
+
+@Injectable()
+export class AuthInterceptor implements HttpInterceptor {
+  intercept(req: HttpRequest<any>, next: HttpHandler) {
+    const token = localStorage.getItem('token');
+    if (token) {
+      const cloned = req.clone({
+        headers: req.headers.set('Authorization', `Bearer ${token}`)
+      });
+      return next.handle(cloned);
+    } else {
+      return next.handle(req);
+    }
+  }
+}
 
 @Injectable({
   providedIn: 'root'
@@ -125,7 +141,7 @@ export class FetchApiDataService {
   }
 
   // Delete a movie from favorite movies
-  public removeFavoriteMovie(username: string, movieId: string): Observable<any> {
+  public deleteFavoriteMovie(username: string, movieId: string): Observable<any> {
     const token = localStorage.getItem('token');
     const headers = new HttpHeaders({
       'Authorization': `Bearer ${token}`,
