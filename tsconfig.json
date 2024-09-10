@@ -29,5 +29,8 @@
     "strictInjectionParameters": true,
     "strictInputAccessModifiers": true,
     "strictTemplates": true
-  }
+  },
+  "include": [
+    "src/**/*"  // Ensure TypeDoc knows to include all files in the src directory
+  ]
 }

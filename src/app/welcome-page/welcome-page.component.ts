@@ -1,7 +1,7 @@
 /**
- * @fileoverview This file defines the WelcomeViewComponent, which is the landing page of the application. 
+ * @fileoverview This file defines the WelcomePageComponent, which is the landing page of the application. 
  * It allows users to register, log in, and navigate to other sections of the application.
- * @module WelcomeViewComponent
+ * @module WelcomePageComponent
  */
 
 import { Component } from '@angular/core';
@@ -25,7 +25,7 @@ import { LoginFormComponent } from '../login-form/login-form.component';
   styleUrls: ['./welcome-page.component.scss'],
   imports: [CommonModule, MatDialogModule, MatButtonModule, NgIf], // Include CommonModule, MatDialogModule, MatButtonModule, and NgIf
 })
-export class WelcomeViewComponent {
+export class WelcomePageComponent {
   /**
    * Tracks if the user is currently logged in.
    * @type {boolean}
