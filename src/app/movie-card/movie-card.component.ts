@@ -1,3 +1,10 @@
+/**
+ * @fileoverview This file defines the MovieCardComponent, which displays a list of movies and 
+ * allows users to interact with movie data, such as adding or removing favorite movies, 
+ * viewing movie details, and managing user actions.
+ * @module MovieCardComponent
+ */
+
 import { Component, OnInit } from '@angular/core';
 import { FetchApiDataService } from '../fetch-api-data.service';
 import { Router } from '@angular/router';
@@ -10,6 +17,11 @@ import { CommonModule } from '@angular/common';
 import { HttpClientModule } from '@angular/common/http'; 
 import { MessageBoxComponent } from '../message-box/message-box.component';
 
+/**
+ * @component
+ * @description Displays a list of movies and allows users to mark movies as favorites, view movie, genre, 
+ * and director details, and manage user actions such as logout or profile navigation.
+ */
 @Component({
   selector: 'app-movie-card',
   standalone: true,
@@ -26,9 +38,25 @@ import { MessageBoxComponent } from '../message-box/message-box.component';
   ]
 })
 export class MovieCardComponent implements OnInit {
+  /**
+   * Array to store all movies fetched from the API.
+   * @type {Array<any>}
+   */
   movies: any[] = [];
+
+  /**
+   * Array to store the user's favorite movies fetched from the API.
+   * @type {Array<any>}
+   */
   favoriteMovies: any[] = [];
 
+  /**
+   * @constructor
+   * @param {FetchApiDataService} fetchApiData - Service for API requests.
+   * @param {Router} router - Router for navigating between views.
+   * @param {MatDialog} dialog - Angular Material Dialog for displaying modals.
+   * @param {MatSnackBar} snackBar - SnackBar for user notifications.
+   */
   constructor(
     public fetchApiData: FetchApiDataService,
     public router: Router,
@@ -36,12 +64,21 @@ export class MovieCardComponent implements OnInit {
     private snackBar: MatSnackBar
   ) {}
 
+  /**
+   * Lifecycle hook that runs when the component is initialized. Fetches movies and favorite movies.
+   * @function ngOnInit
+   * @returns {void}
+   */
   ngOnInit(): void {
     this.getMovies();
     this.getFavoriteMovies();
   }
 
-  // Fetch all movies
+  /**
+   * Fetches all movies from the API and updates the movies array.
+   * @function getMovies
+   * @returns {void}
+   */
   getMovies(): void {
     this.fetchApiData.getAllMovies().subscribe((res: any) => {
       this.movies = res;
@@ -51,7 +88,11 @@ export class MovieCardComponent implements OnInit {
     });
   }
 
-  // Fetch favorite movies of the user
+  /**
+   * Fetches the user's favorite movies from the API and updates the favoriteMovies array.
+   * @function getFavoriteMovies
+   * @returns {void}
+   */
   getFavoriteMovies(): void {
     const username = localStorage.getItem('username');
     if (username) {
@@ -64,14 +105,23 @@ export class MovieCardComponent implements OnInit {
     }
   }
 
-  // Check if the movies are in favorites and update the UI
+  /**
+   * Checks if each movie is in the user's favorite movies and updates the isFavorite flag for each movie.
+   * @function checkFavoriteMovies
+   * @returns {void}
+   */
   checkFavoriteMovies(): void {
     this.movies.forEach((movie) => {
       movie.isFavorite = this.favoriteMovies.some((favMovie: any) => favMovie._id === movie._id);
     });
   }
 
-  // Toggle favorite movie status
+  /**
+   * Adds or removes a movie from the user's favorite movies and updates the UI accordingly.
+   * @function modifyFavoriteMovies
+   * @param {any} movie - The movie object to be added or removed from favorites.
+   * @returns {void}
+   */
   modifyFavoriteMovies(movie: any): void {
     const username = localStorage.getItem('username');
     if (movie.isFavorite) {
@@ -93,7 +143,12 @@ export class MovieCardComponent implements OnInit {
     }
   }
 
-  // Show movie details
+  /**
+   * Opens a dialog to show detailed information about a specific movie.
+   * @function showDetail
+   * @param {any} movie - The movie object to display in the dialog.
+   * @returns {void}
+   */
   showDetail(movie: any): void {
     this.dialog.open(MessageBoxComponent, {
       data: { title: movie.title, content: movie.description },
@@ -101,7 +156,12 @@ export class MovieCardComponent implements OnInit {
     });
   }
 
-  // Show genre details
+  /**
+   * Opens a dialog to show detailed information about a movie's genre.
+   * @function showGenre
+   * @param {any} movie - The movie object whose genre details will be displayed.
+   * @returns {void}
+   */
   showGenre(movie: any): void {
     this.dialog.open(MessageBoxComponent, {
       data: { title: movie.genre.name, content: movie.genre.description },
@@ -109,7 +169,12 @@ export class MovieCardComponent implements OnInit {
     });
   }
 
-  // Show director details
+  /**
+   * Opens a dialog to show detailed information about a movie's director.
+   * @function showDirector
+   * @param {any} movie - The movie object whose director details will be displayed.
+   * @returns {void}
+   */
   showDirector(movie: any): void {
     this.dialog.open(MessageBoxComponent, {
       data: { title: movie.director.name, content: movie.director.bio },
@@ -117,13 +182,21 @@ export class MovieCardComponent implements OnInit {
     });
   }
 
-  // Logout functionality
+  /**
+   * Logs the user out by clearing local storage and navigating to the welcome page.
+   * @function logout
+   * @returns {void}
+   */
   logout(): void {
     this.router.navigate(['/welcome']);
     localStorage.clear();
   }
 
-  // Redirect to user profile
+  /**
+   * Redirects the user to the profile page.
+   * @function redirectProfile
+   * @returns {void}
+   */
   redirectProfile(): void {
     this.router.navigate(['/profile']);
   }

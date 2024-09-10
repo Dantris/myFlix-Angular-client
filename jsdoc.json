@@ -1,0 +1,15 @@
+{
+    "source": {
+      "include": ["src/app"],
+      "includePattern": ".+\\.ts$",
+      "excludePattern": "(node_modules/|docs)"
+    },
+    "plugins": ["node_modules/jsdoc-babel"],
+    "babel": {
+      "extensions": ["ts"]
+    },
+    "opts": {
+      "destination": "./docs"
+    }
+  }
+  
